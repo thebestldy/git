@@ -1,0 +1,3 @@
+const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
+const assets={'/':['index.html','text/html'],'/index.html':['index.html','text/html'],'/styles.css':['styles.css','text/css'],'/ledger.js':['ledger.js','text/javascript'],'/app.js':['app.js','text/javascript']};
+http.createServer((req,res)=>{const asset=assets[new URL(req.url,'http://localhost').pathname];if(!asset||!['GET','HEAD'].includes(req.method)){res.writeHead(404);res.end('Not found');return;}res.writeHead(200,{'Content-Type':asset[1]+'; charset=utf-8','Cache-Control':'no-store'});if(req.method==='HEAD')res.end();else fs.createReadStream(path.join(__dirname,asset[0])).pipe(res);}).listen(4173,'127.0.0.1',()=>console.log('轻账：http://127.0.0.1:4173'));
